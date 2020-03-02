@@ -74,7 +74,22 @@ export default {
       // validate 1.可以使用promise格式 执行成功后会进入到then中 失败进入到catch中
       //  2.也可以传入一个函数 function(boolean值){if(trun){success}else{failure}}
       this.$refs.loginForm.validate().then(() => {
-
+        // 检验输入框格式后 调用接口传值 进行数据验证
+        this.$axios({
+          url: '/authorizations',
+          // params:{}, 指的url参数 拼接到地址中 常用于get
+          data: this.loginForm, // 数据 body请求体中的参数
+          method: 'post' // 请求方式
+        }).then(res => {
+          // res会返回一个token值 相当于令牌 前端每次调用接口获取数据是都需要带着token值
+          // 所以在第一次登录获取token时 将token的值存于 localstorage中 以便于后期使用
+          window.localStorage.setItem('user-token', res.data.data.token)
+          // 验证成功，跳转到主页
+          this.$router.push('/home')
+        }).catch(() => {
+          // element-ui 提示框
+          this.$message.error('手机号码或者验证码错误')
+        })
       })
     }
   }
