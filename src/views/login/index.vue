@@ -8,7 +8,8 @@
       </div>
       <!-- 表单 -->
       <!-- :model :rules 与data中验证数据进行绑定 为验证数据做准备 -->
-      <el-form :model="loginForm" :rules="loginRules" style="margin-top:20px;padding:0 10px;">
+      <!-- ref 设置属性，使方法中可以获得该对象实例 用于手动校验信息 -->
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" style="margin-top:20px;padding:0 10px;">
         <!-- 每一个表单容器 -->
           <!-- prop 输入所需校验的字段名 -->
        <el-form-item prop="mobile">
@@ -26,7 +27,8 @@
          <el-checkbox v-model="loginForm.checked">我已阅读同意用户协议和隐私条款</el-checkbox>
        </el-form-item>
        <el-form-item>
-         <el-button style="width:100%" type="primary">登录</el-button>
+         <!-- 给登录按钮添加点击事件 -->
+         <el-button @click="login" style="width:100%" type="primary">登录</el-button>
        </el-form-item>
       </el-form>
     </el-card>
@@ -63,6 +65,17 @@ export default {
           }
         }]
       }
+    }
+  },
+  // 设置手动校验方法 点击登录进行校验
+  methods: {
+    login () {
+      // this.$refs.loginForm 获取当前实例对象
+      // validate 1.可以使用promise格式 执行成功后会进入到then中 失败进入到catch中
+      //  2.也可以传入一个函数 function(boolean值){if(trun){success}else{failure}}
+      this.$refs.loginForm.validate().then(() => {
+
+      })
     }
   }
 }
