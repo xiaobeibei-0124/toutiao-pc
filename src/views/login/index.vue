@@ -7,18 +7,23 @@
         <img src="../../assets/img/logo_index.png" alt="">
       </div>
       <!-- 表单 -->
-      <el-form style="margin-top:20px;padding:0 10px;">
+      <!-- :model :rules 与data中验证数据进行绑定 为验证数据做准备 -->
+      <el-form :model="loginForm" :rules="loginRules" style="margin-top:20px;padding:0 10px;">
         <!-- 每一个表单容器 -->
-       <el-form-item>
+          <!-- prop 输入所需校验的字段名 -->
+       <el-form-item prop="mobile">
          <!-- 表单域 -->
-         <el-input placeholder="请输入手机号"></el-input>
+          <!-- v-model 将表单数据进行双向绑定传入data中 进行后期验证 -->
+         <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
        </el-form-item>
-       <el-form-item>
-         <el-input style="width:60%" placeholder="验证码"></el-input>
+       <!-- 验证码 -->
+       <el-form-item prop="code">
+         <el-input v-model="loginForm.code" style="width:60%" placeholder="验证码"></el-input>
          <el-button plain style="float:right">发送验证码</el-button>
        </el-form-item>
-       <el-form-item>
-         <el-checkbox>我已阅读同意用户协议和隐私条款</el-checkbox>
+       <!-- 复选框 -->
+       <el-form-item prop="checked">
+         <el-checkbox v-model="loginForm.checked">我已阅读同意用户协议和隐私条款</el-checkbox>
        </el-form-item>
        <el-form-item>
          <el-button style="width:100%" type="primary">登录</el-button>
@@ -30,7 +35,36 @@
 
 <script>
 export default {
-
+  data () {
+    return {
+      // 设置代码校验所用的数据
+      loginForm: {
+        mobile: '',
+        code: '',
+        checked: false
+      },
+      // 设置验证规则
+      loginRules: {
+        // 手机号码的校验规则
+        mobile: [{ required: true, message: '您的手机号码不能为空' },
+          { pattern: /^1[3-9]\d{9}$/, message: '您输入的号码格式不正确' }],
+        // 正则表达式：/中间写数据/ ^开头 $结尾 \d 0-9数字 {9}9位
+        // 验证码的校验规则
+        code: [{ required: true, message: '验证码不能为空' },
+          { pattern: /^\d{6}$/, message: '验证码错误' }],
+        // 复选框的校验规则
+        checked: [{
+          // validator 自定义校验函数
+          // rule 当前函数体中自定义的校验规则
+          // value 选用自定义校验函数所对应的value值
+          validator: function (rule, value, callback) {
+            // callback 无论校验成功失败都要执行一个回调函数 如果失败需要在函数中 new Error 抛出错误的信息
+            value ? callback() : callback(new Error('勾选此项完成登录'))
+          }
+        }]
+      }
+    }
+  }
 }
 </script>
 // lang让里面内容可以用less scope 让中间的属性只能自己使用，不是全局的
@@ -55,9 +89,7 @@ export default {
         height: 40px;
       }
     }
-
   }
-
 }
 
 </style>
