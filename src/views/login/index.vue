@@ -51,9 +51,11 @@ export default {
         mobile: [{ required: true, message: '您的手机号码不能为空' },
           { pattern: /^1[3-9]\d{9}$/, message: '您输入的号码格式不正确' }],
         // 正则表达式：/中间写数据/ ^开头 $结尾 \d 0-9数字 {9}9位
+
         // 验证码的校验规则
         code: [{ required: true, message: '验证码不能为空' },
           { pattern: /^\d{6}$/, message: '验证码错误' }],
+
         // 复选框的校验规则
         checked: [{
           // validator 自定义校验函数
