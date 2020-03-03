@@ -14,12 +14,12 @@
         <img :src="userInfo.photo" alt="">
 
         <!-- 下拉选项 -->
-        <el-dropdown trigger="click">
+        <el-dropdown trigger="click" @command='clickMenu'>
           <span>{{userInfo.name}}</span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人信息</el-dropdown-item>
-            <el-dropdown-item>git地址</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item command="info">个人信息</el-dropdown-item>
+            <el-dropdown-item command="git">git地址</el-dropdown-item>
+            <el-dropdown-item command="exit">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-row>
@@ -49,6 +49,19 @@ export default {
       // 成功获取，将获取到的数据传给定义好的data中
       this.userInfo = res.data.data
     })
+  },
+  methods: {
+    clickMenu (command) {
+      if (command === 'info') {
+        // 点击了个人信息
+      } else if (command === 'git') {
+        window.location.href = 'https://github.com/xiaobeibei-0124/toutiao-pc'
+      } else {
+        // 退出 删除本地token值 返回到登录页
+        window.localStorage.removeItem('user-token')
+        this.$router.push('/login')
+      }
+    }
   }
 
 }
