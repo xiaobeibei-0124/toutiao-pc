@@ -11,11 +11,11 @@
     <el-col :span="12" class="right">
       <!-- 在放置一个el-row使右侧靠右对齐 -->
       <el-row type="flex" aligin="middle" justify="end">
-        <img src="../../assets/img/avatar.jpg" alt="">
+        <img :src="userInfo.photo" alt="">
 
         <!-- 下拉选项 -->
         <el-dropdown trigger="click">
-          <span>用户昵称</span>
+          <span>{{userInfo.name}}</span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>个人信息</el-dropdown-item>
             <el-dropdown-item>git地址</el-dropdown-item>
@@ -29,6 +29,27 @@
 
 <script>
 export default {
+  data () {
+    return {
+      userInfo: {}
+    }
+  },
+  // 获取头部用户信息 头像 昵称等 需要在初始化后就要执行 对应生命周期中 created()函数
+  created () {
+    // 接口文档 获取用户信息需要传入token值 首先获取token
+    const token = localStorage.getItem('user-token')
+    // 调用接口
+    this.$axios({
+      url: '/user/profile',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      method: 'get'
+    }).then(res => {
+      // 成功获取，将获取到的数据传给定义好的data中
+      this.userInfo = res.data.data
+    })
+  }
 
 }
 </script>
