@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import '@/permission' // 引入路由前置守卫
 import components from '@/components' // 引入自定义的组件
 import ElementUI from 'element-ui' // 引入element-ui
 import axios from 'axios' // 引入axios
