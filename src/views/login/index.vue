@@ -85,7 +85,7 @@ export default {
         }).then(res => {
           // res会返回一个token值 相当于令牌 前端每次调用接口获取数据是都需要带着token值
           // 所以在第一次登录获取token时 将token的值存于 localstorage中 以便于后期使用
-          window.localStorage.setItem('user-token', res.data.data.token)
+          window.localStorage.setItem('user-token', res.data.token)
           // 验证成功，跳转到主页
           this.$router.push('/home')
         }).catch(() => {

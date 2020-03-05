@@ -36,18 +36,13 @@ export default {
   },
   // 获取头部用户信息 头像 昵称等 需要在初始化后就要执行 对应生命周期中 created()函数
   created () {
-    // 接口文档 获取用户信息需要传入token值 首先获取token
-    const token = localStorage.getItem('user-token')
     // 调用接口
     this.$axios({
       url: '/user/profile',
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
       method: 'get'
     }).then(res => {
       // 成功获取，将获取到的数据传给定义好的data中
-      this.userInfo = res.data.data
+      this.userInfo = res.data
     })
   },
   methods: {
