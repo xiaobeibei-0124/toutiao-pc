@@ -15,8 +15,12 @@
       <el-table-column prop='total_comment_count' label='总评论数'></el-table-column>
       <el-table-column prop='fans_comment_count' label='粉丝评论数'></el-table-column>
       <el-table-column label='操作'>
-        <el-button type="text" size="small">修改</el-button>
-        <el-button type="text" size="small">关闭评论</el-button>
+        <!-- 自定义表格可以用定义域插槽获取表格中的数值 -->
+        <!-- slot-scope='自定义名称'可以获取到 row, column, $index 和 store（table 内部的状态管理）的数据 -->
+        <template slot-scope="obj">
+          <el-button type="text" size="small">修改</el-button>
+          <el-button type="text" size="small" @click="openAndClose(obj.row)">{{obj.row.comment_status ? '关闭' : '打开'}}评论</el-button>
+        </template>
       </el-table-column>
       </el-table>
     </el-card>
@@ -47,6 +51,28 @@ export default {
       // index 代表当前的索引
       // 该函数需要返回一个值 用来显示
       return cellValue ? '正常' : '关闭'
+    },
+    openAndClose (row) {
+      const mess = row.comment_status ? '关闭' : '打开'
+      // 弹窗提示是否要进行这项操作
+      this.$confirm(`是否确定${mess}评论`).then(() => {
+        // 点击确定后调接口修改后台数据
+        this.$axios({
+          url: '/comments/status',
+          methods: 'put',
+          params: {
+            article_id: row.id
+          },
+          data: {
+            allow_comment: !row.comment_status // 如果页面是打开状态就关闭评论 传是否允许评论的值
+          }
+        }).then(() => {
+          this.$message.success(`${mess}评论成功`)
+          this.getcomments()
+        }).catch(() => {
+          this.$message.error(`${mess}评论失败`)
+        })
+      })
     }
   },
   created () {

@@ -1,7 +1,7 @@
 <template>
   <!-- 使用elementUI container布局 -->
   <el-container>
-    <el-aside style="width:230px;background-color:'#323745';">
+    <el-aside style="width:230px;background-color:#323745;">
       <layout-aside></layout-aside>
     </el-aside>
     <!-- 中间二级路由及头部 -->
