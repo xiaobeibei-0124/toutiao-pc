@@ -7,8 +7,15 @@
         图片素材
       </template>
     </bread-crumb>
+    <!-- 上传文件区域 -->
+    <el-row type='flex' justify="end">
+      <!-- 上传组件要求必须传action属性 不传就会报错 可以给一个空字符串 show-file-list 是否显示已上传文件列表-->
+      <el-upload :show-file-list="false" :http-request="uploadImg" action="">
+        <el-button size="small" type='primary'>上传素材</el-button>
+      </el-upload>
+    </el-row>
     <!-- 活页标签 -->
-    <el-tabs v-model="activeName" @tab-click="changeTab">
+    <el-tabs v-model="activeName" @tab-click="changeTab" v-loading='loading'>
       <el-tab-pane label="全部图片" name="all">
         <div class="img-list">
             <el-card class="img-card" v-for="item in list" :key="item.id" :body-style="{ padding: '0px' }">
@@ -48,9 +55,10 @@ export default {
       list: [],
       page: {
         total: 0, // 总页数
-        pageSize: 8, // 每页显示几条
+        pageSize: 16, // 每页显示几条
         currentPage: 1 // 默认显示第一页
-      }
+      },
+      loading: false
     }
   },
   methods: {
@@ -64,7 +72,25 @@ export default {
       this.page.currentPage = 1 // 当切换选项时，分页应位于首页
       this.getMaterial()
     },
+    // 上传素材的方法
+    uploadImg (params) {
+      // 接口参数要求是formdata类型
+      const data = new FormData()
+      data.append('image', params.file) // params.file就是要上传的文件
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data
+      }).then(() => {
+        // 成功了就从新提取数据
+        this.getMaterial()
+      }).catch(() => {
+        this.$message.error('文件上传失败')
+      })
+    },
+    // 获取素材列表的方法
     getMaterial () {
+      this.loading = true
       this.$axios({
         url: '/user/images',
         method: 'get',
@@ -79,6 +105,7 @@ export default {
         this.list = res.data.results
         // 获取完数据 将总数传给page
         this.page.total = res.data.total_count
+        this.loading = false
       }).catch(() => {
         this.$message.error('请求错误')
       })
