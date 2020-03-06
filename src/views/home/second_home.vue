@@ -20,6 +20,6 @@ export default {
     background-image: url("http://e.hiphotos.baidu.com/zhidao/pic/item/b64543a98226cffc7a951157b8014a90f703ea9c.jpg");
     height: calc(100vh - 60px);
     background-size: cover;
-    font-size: 12px;
+    font-size: 20px;
   }
 </style>

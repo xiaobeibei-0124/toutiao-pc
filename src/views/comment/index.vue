@@ -59,9 +59,9 @@ export default {
         // 点击确定后调接口修改后台数据
         this.$axios({
           url: '/comments/status',
-          methods: 'put',
+          method: 'put',
           params: {
-            article_id: row.id
+            article_id: row.id.toString() // 之前将id设置为bigint型，转化为字符串型
           },
           data: {
             allow_comment: !row.comment_status // 如果页面是打开状态就关闭评论 传是否允许评论的值
