@@ -23,6 +23,16 @@
         </template>
       </el-table-column>
       </el-table>
+      <!-- 防止分页组件 -->
+      <el-row style="height:80px" type="flex" justify="center" align="middle">
+        <!-- 拉取数据渲染页面后总数 每页显示的数量 所在第几页 -->
+        <el-pagination background layout="prev, pager, next"
+        :current-page='page.currentPage'
+        :page-size="page.pageSize"
+        :total="page.total"
+        @current-change='changePage'>
+        </el-pagination>
+      </el-row>
     </el-card>
 </template>
 
@@ -30,18 +40,33 @@
 export default {
   data () {
     return {
+      page: {
+        total: 0, // 默认总数是0
+        currentPage: 1, // 默认页码第一页
+        pageSize: 10 // 默认每页显示10条
+      },
       list: []
     }
   },
   methods: {
+    changePage (newpage) {
+      // alert(newpage)
+      this.page.currentPage = newpage // newpage是点击的那页就传哪页
+      // 重新拉取数据
+      this.getcomments()
+    },
     getcomments () {
       this.$axios({
         url: '/articles',
         params: {
-          response_type: 'comment'
+          response_type: 'comment',
+          page: this.page.currentPage, // 分页时传递所点击的页数
+          per_page: this.page.pageSize // 每页显示几条
         }
       }).then(res => {
         this.list = res.data.results
+        // 获取完数据后将总数赋值给total
+        this.page.total = res.data.total_count
       })
     },
     formatterBool (row, column, cellValue, index) {
