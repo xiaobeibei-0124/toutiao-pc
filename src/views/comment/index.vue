@@ -7,8 +7,8 @@
         评论管理
       </template>
     </bread-crumb>
-    <!-- 下部表格 -->
-    <el-table :data='list' stripe>
+    <!-- 下部表格 v-loading遮罩-->
+    <el-table :data='list' stripe v-loading='loading'>
       <el-table-column prop='title' label='标题' width='600'></el-table-column>
       <!-- 给el-table-column 一个formatter属性 用来格式化内容 因为table中不显示布尔值-->
       <el-table-column :formatter='formatterBool' prop='comment_status' label='评论状态'></el-table-column>
@@ -45,7 +45,8 @@ export default {
         currentPage: 1, // 默认页码第一页
         pageSize: 10 // 默认每页显示10条
       },
-      list: []
+      list: [],
+      loading: false // 设置默认遮罩是关闭的
     }
   },
   methods: {
@@ -56,6 +57,8 @@ export default {
       this.getcomments()
     },
     getcomments () {
+      // 页面变化后，发送请求前，开启遮罩
+      this.loading = true
       this.$axios({
         url: '/articles',
         params: {
@@ -67,6 +70,8 @@ export default {
         this.list = res.data.results
         // 获取完数据后将总数赋值给total
         this.page.total = res.data.total_count
+        // 所有请求完毕，关闭遮罩
+        this.loading = false
       })
     },
     formatterBool (row, column, cellValue, index) {
