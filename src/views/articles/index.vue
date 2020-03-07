@@ -1,5 +1,6 @@
 <template>
-  <el-card>
+  <div>
+    <el-card class="articles-choose">
     <bread-crumb slot="header">
       <template slot="title">
         内容列表
@@ -26,6 +27,27 @@
       </el-form-item>
     </el-form>
   </el-card>
+  <el-card class="articles">
+      <!-- 下部内容区域 -->
+    <el-row type="flex" align="middle" class="total" slot="header">
+      <span>共找到118156条符合条件的内容</span>
+    </el-row>
+    <div class="article-item" v-for="item in 10" :key="item">
+      <div class="left">
+        <img src="http://b-ssl.duitang.com/uploads/item/201802/20/20180220165946_RiGPS.thumb.700_0.jpeg" alt="">
+        <div class="info">
+          <span> 132456</span>
+          <el-tag class="tag">已发表</el-tag>
+          <span class="date">2020-03-07</span>
+        </div>
+      </div>
+      <div class="right">
+        <i class="el-icon-edit">修改</i>
+        <i class="el-icon-delete">删除</i>
+      </div>
+    </div>
+  </el-card>
+  </div>
 </template>
 
 <script>
@@ -55,6 +77,54 @@ export default {
 }
 </script>
 
-<style>
+<style lang='less' scoped>
+.articles-choose {
+  margin: 10px;
+}
+ .articles {
+   margin: 10px;
+   .total {
+    height: 40px;
+    // border-bottom: 1px dashed #ccc;
+  }
+  .article-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px  0;
+    border-bottom: 1px solid #ccc;
+    .left {
+      display: flex;
+      img {
+        width: 180px;
+        height: 100px;
+        border-radius: 4px;
+      }
+      .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 100px;
+        margin-left: 15px;
+        .date {
+          font-size: 12px;
+          color: #ccc;
+        }
+        .tag {
+          width: 60px;
+          text-align: center;
+        }
+      }
+    }
+    .right {
+      font-size: 12px;
+      margin-right: 15px;
+      cursor: pointer;
+      user-select: none;
+      i {
+        margin: 0 5px;
+      }
+    }
 
+  }
+ }
 </style>
