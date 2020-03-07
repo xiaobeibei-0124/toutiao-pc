@@ -22,8 +22,8 @@
               <img :src='item.url' >
               <!-- 图标区域 -->
               <el-row class='operate' type="flex" align="middle" justify="space-around">
-                <i class="el-icon-star-on"></i>
-                <i class="el-icon-delete-solid"></i>
+                <i @click="collectImg(item)" class="el-icon-star-on" :style="{color:item.is_collected ? 'red' : 'black'}"></i>
+                <i @click="delImg(item)" class="el-icon-delete-solid"></i>
               </el-row>
             </el-card>
         </div>
@@ -71,6 +71,31 @@ export default {
     changeTab () {
       this.page.currentPage = 1 // 当切换选项时，分页应位于首页
       this.getMaterial()
+    },
+    // 收藏图片的方法
+    collectImg (item) {
+      this.$axios({
+        url: `/user/images/${item.id}`,
+        method: 'put',
+        data: {
+          collect: !item.is_collected
+        }
+      }).then(() => {
+        this.getMaterial()
+      }).catch(() => {
+        this.$message.error('操作失败')
+      })
+    },
+    // 删除图片的方法
+    delImg (item) {
+      this.$axios({
+        url: `/user/images/${item.id}`,
+        method: 'delete'
+      }).then(() => {
+        this.getMaterial()
+      }).catch(() => {
+        this.$message.error('操作失败')
+      })
     },
     // 上传素材的方法
     uploadImg (params) {
