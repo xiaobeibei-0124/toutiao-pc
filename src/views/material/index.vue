@@ -18,8 +18,8 @@
     <el-tabs v-model="activeName" @tab-click="changeTab" v-loading='loading'>
       <el-tab-pane label="全部图片" name="all">
         <div class="img-list">
-            <el-card class="img-card" v-for="item in list" :key="item.id" :body-style="{ padding: '0px' }">
-              <img :src='item.url' >
+            <el-card class="img-card" v-for="(item,index) in list" :key="item.id" :body-style="{ padding: '0px' }">
+              <img :src='item.url' @click="selectImg(index)">
               <!-- 图标区域 -->
               <el-row class='operate' type="flex" align="middle" justify="space-around">
                 <i @click="collectImg(item)" class="el-icon-star-on" :style="{color:item.is_collected ? 'red' : 'black'}"></i>
@@ -30,8 +30,8 @@
       </el-tab-pane>
       <el-tab-pane label="收藏图片" name="collect">
          <div class="img-list">
-            <el-card class="img-card" v-for="item in list" :key="item.id" :body-style="{ padding: '0px' }">
-              <img :src='item.url' >
+            <el-card class="img-card" v-for="(item,index) in list" :key="item.id" :body-style="{ padding: '0px' }">
+              <img :src='item.url' @click="selectImg(index)">
             </el-card>
         </div>
       </el-tab-pane>
@@ -44,6 +44,15 @@
        :current-page="page.currentPage">
       </el-pagination>
     </el-row>
+    <!-- 走马灯预览组件 close关闭预览窗口 opened动画执行完就加载好传递的数值-->
+    <el-dialog :visible="dialogVisible" @close='dialogVisible = false' @opened='openEnd'>
+      <!-- 走马灯组件 设置ref 获取当前组件实例自定义方法将点击幻灯片的索引传递给点击之后的预览组件-->
+       <el-carousel ref="myCarousel" height='400px' indicator-position="outside">
+         <el-carousel-item v-for="item in list" :key="item.id">
+           <img :src="item.url" style='width:100%;height:100%'>
+         </el-carousel-item>
+       </el-carousel>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -58,7 +67,9 @@ export default {
         pageSize: 16, // 每页显示几条
         currentPage: 1 // 默认显示第一页
       },
-      loading: false
+      loading: false,
+      dialogVisible: false,
+      clickIndex: -1
     }
   },
   methods: {
@@ -71,6 +82,15 @@ export default {
     changeTab () {
       this.page.currentPage = 1 // 当切换选项时，分页应位于首页
       this.getMaterial()
+    },
+    // 走马灯相关方法
+    selectImg (index) {
+      // 将索引赋值
+      this.clickIndex = index // 记住索引值
+      this.dialogVisible = true
+    },
+    openEnd () {
+      this.$refs.myCarousel.setActiveItem(this.clickIndex) // 在图片加载完成时将id赋值给走马灯组件，保证初始有值
     },
     // 收藏图片的方法
     collectImg (item) {
