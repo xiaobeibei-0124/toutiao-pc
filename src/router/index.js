@@ -38,7 +38,7 @@ const routes = [
       component: () => import('@/views/articles')
     },
     {
-      path: 'publish',
+      path: 'publish/:articleId?', // 发布文章 :动态路由传值 从列表页点击修改所传的id值 加上问号表示 可有可无
       component: () => import('@/views/publish')
     }
     ]

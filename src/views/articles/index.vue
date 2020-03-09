@@ -41,7 +41,7 @@
           </div>
         </div>
         <div class="right">
-          <i class="el-icon-edit" >修改</i>
+          <i class="el-icon-edit" @click="$router.push(`/home/publish/${item.id.toString()}`)">修改</i>
           <span @click="delArticles(item.id.toString())"><i class="el-icon-delete">删除</i></span>
         </div>
       </div>
