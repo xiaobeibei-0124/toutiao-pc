@@ -30,15 +30,17 @@
   <el-card class="articles">
       <!-- 下部内容区域 -->
     <el-row type="flex" align="middle" class="total" slot="header">
-      <span>共找到118156条符合条件的内容</span>
+      <span>共找到{{total_count}}条符合条件的内容</span>
     </el-row>
-    <div class="article-item" v-for="item in 10" :key="item">
+    <div class="article-item" v-for="item in list" :key="item.id.toString()">
       <div class="left">
-        <img src="http://b-ssl.duitang.com/uploads/item/201802/20/20180220165946_RiGPS.thumb.700_0.jpeg" alt="">
+        <!-- 看有无图片 没有的话用自定义的图片 有的话就用它的 返回是个数组 所以是[0] -->
+        <img :src="item.cover.images.length ? item.cover.images[0] : defaultImg" alt="">
         <div class="info">
-          <span> 132456</span>
-          <el-tag class="tag">已发表</el-tag>
-          <span class="date">2020-03-07</span>
+          <span> {{item.title}}</span>
+          <!-- 状态栏返回的是数字，需要用过滤器初期数据 在网上填 用法：待处理的内容|过滤器名字-->
+          <el-tag :type='item.status | filterType' class="tag">{{ item.status | filterStatus}}</el-tag>
+          <span class="date">{{item.pubdate}}</span>
         </div>
       </div>
       <div class="right">
@@ -59,20 +61,60 @@ export default {
         channel_id: null, // 表示没有任何的频道
         dateRange: [] // 日期范围
       },
+      total_count: [],
+      list: [], // 接收文章列表
+      defaultImg: require('../../assets/img/mydefine.jpeg'), // 用来装固定图片,地址变成了固定的变量 在编译的时候会被拷贝到对应的位置，如果直接写地址会找不到
       channels: [] // 用来装返回的频道数据
     }
   },
   methods: {
+    // 获取频道数据
     getChannel () {
       this.$axios({
         url: '/channels'
       }).then(res => {
         this.channels = res.data.channels
       })
+    },
+    // 获取具体内容
+    getArticles () {
+      this.$axios({
+        url: '/articles'
+      }).then(res => {
+        this.list = res.data.results
+        this.total_count = res.data.total_count
+      })
+    }
+  },
+  filters: {
+    filterStatus (value) {
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '审核通过'
+        case 3:
+          return '审核失败'
+      }
+    },
+    filterType (value) {
+      switch (value) {
+        case 0:
+          return 'success'
+        case 1:
+          return 'warning'
+        case 2:
+          return ''
+        case 3:
+          return 'danger'
+      }
     }
   },
   created () {
     this.getChannel()
+    this.getArticles()
   }
 }
 </script>
@@ -84,7 +126,7 @@ export default {
  .articles {
    margin: 10px;
    .total {
-    height: 40px;
+    height: 30px;
     // border-bottom: 1px dashed #ccc;
   }
   .article-item {
@@ -110,7 +152,7 @@ export default {
           color: #ccc;
         }
         .tag {
-          width: 60px;
+          width: 80px;
           text-align: center;
         }
       }
