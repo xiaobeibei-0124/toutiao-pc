@@ -1,16 +1,17 @@
 <template>
-  <el-card>
+    <el-card  shadow="never">
     <bread-crumb slot="header">
       <template slot="title">发表文章</template>
     </bread-crumb>
-    <el-form style="margin-left:50px" label-width="100px" :model="formItem" :rules="formRules" ref="myForm">
+    <el-form style="margin-left:20px" label-width="100px" :model="formItem" :rules="formRules" ref="myForm">
       <el-form-item label="标题" prop="title">
         <el-input placeholder="请输入您的标题" style="width:60%" v-model="formItem.title"></el-input>
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <el-input type="textarea" placeholder="请输入您的内容" :rows="4" style="width:80%" v-model="formItem.content"></el-input>
+        <!-- 将input换为quill-editor 引用富文本编辑器 -->
+        <quill-editor style="width:90%;height:350px" v-model="formItem.content"></quill-editor>
       </el-form-item>
-      <el-form-item label="封面" prop="cover">
+      <el-form-item label="封面" prop="cover" style="margin-top:130px">
         <el-radio-group v-model="formItem.cover.type">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>

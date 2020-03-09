@@ -3,6 +3,12 @@
 import layoutAside from './home/layout-aside.vue' // 引入组件
 import layoutHeader from './home/layout-header.vue'
 import breadcrumb from './common/bread-crumb.vue'
+import VueQuillEditor from 'vue-quill-editor'
+
+// require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
 export default {
   install: function (Vue) {
@@ -10,5 +16,6 @@ export default {
     Vue.component('layout-aside', layoutAside)
     Vue.component('layout-header', layoutHeader)
     Vue.component('bread-crumb', breadcrumb)
+    Vue.use(VueQuillEditor)
   }
 }
