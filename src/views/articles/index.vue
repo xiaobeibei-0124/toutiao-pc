@@ -101,7 +101,7 @@ export default {
           this.$message.success('删除文章成功')
           this.changeCondition()
         }).catch(() => {
-          this.$message.success('删除文章失败')
+          this.$message.error('删除文章失败')
         })
       })
     },
