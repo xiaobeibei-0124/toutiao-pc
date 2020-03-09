@@ -22,7 +22,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="时间选择：">
-        <el-date-picker type="daterange" v-model="searchForm.dateRange">
+        <el-date-picker type="daterange" value-format="yyyy-MM-dd" v-model="searchForm.dateRange">
         </el-date-picker>
       </el-form-item>
     </el-form>
@@ -67,7 +67,31 @@ export default {
       channels: [] // 用来装返回的频道数据
     }
   },
+  // 监视删选项的变化
+  watch: {
+    // 监视谁就写谁
+    searchForm: {
+      deep: true, // 固定写法 深度检测searchform中的所有数据
+      handler () {
+        // 监视到发生变化后 执行此函数
+        this.changeCondition()
+      }
+    }
+  },
   methods: {
+    // 搜索项变化时，先组装条件 在同意发请求 用watch 或者 change 监视数据是否发生变化 发生变化执行此方法 再重新刷新页面
+    changeCondition () {
+      // 组装要传递的数据
+      const params = {
+        status: this.searchForm.status === 5 ? null : this.searchForm.status,
+        channel_id: this.searchForm.channel_id,
+        // 看是否传递了时间 有传参的话 就有长度
+        begin_pubdate: this.searchForm.dateRange.length ? this.searchForm.dateRange[0] : null,
+        end_pubdate: this.searchForm.dateRange.length > 1 ? this.searchForm.dateRange[1] : null
+      }
+      // 调用页面方法
+      this.getArticles(params)
+    },
     // 获取频道数据
     getChannel () {
       this.$axios({
@@ -77,9 +101,10 @@ export default {
       })
     },
     // 获取具体内容
-    getArticles () {
+    getArticles (params) {
       this.$axios({
-        url: '/articles'
+        url: '/articles',
+        params
       }).then(res => {
         this.list = res.data.results
         this.total_count = res.data.total_count
