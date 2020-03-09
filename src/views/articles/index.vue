@@ -41,8 +41,8 @@
           </div>
         </div>
         <div class="right">
-          <i class="el-icon-edit">修改</i>
-          <i class="el-icon-delete">删除</i>
+          <i class="el-icon-edit" >修改</i>
+          <span @click="delArticles(item.id.toString())"><i class="el-icon-delete">删除</i></span>
         </div>
       </div>
       <!-- 分页区域 -->
@@ -91,6 +91,20 @@ export default {
     }
   },
   methods: {
+    // 删除文章
+    delArticles (id) {
+      this.$confirm('您确定要删除此条文章吗？').then(() => {
+        this.$axios({
+          url: `/articles/${id}`,
+          method: 'delete'
+        }).then(() => {
+          this.$message.success('删除文章成功')
+          this.changeCondition()
+        }).catch(() => {
+          this.$message.success('删除文章失败')
+        })
+      })
+    },
     // 改变页码事件
     changePage (newpage) {
       this.page.currentPage = newpage
