@@ -55,6 +55,14 @@ export default {
     }
   },
   methods: {
+    // 根据id获取文章详情数据
+    getArticleById (id) {
+      this.$axios({
+        url: `/articles/${id}`
+      }).then(res => {
+        this.formItem = res.data
+      })
+    },
     // 获取频道
     getChannel () {
       this.$axios({
@@ -66,9 +74,12 @@ export default {
     // 点击发布校验
     publish (draft) {
       this.$refs.myForm.validate().then(() => {
+        const { articleId } = this.$route.params // 是否有id值 来判断是修改还是新增
+        //  发布正式文章 发布草稿文章
+        //  修改正式文章  修改草稿文章
         this.$axios({
-          url: '/articles',
-          method: 'post',
+          url: articleId ? `/articles/${articleId}` : '/articles',
+          method: articleId ? 'put' : 'post',
           params: { draft }, // query参数
           data: this.formItem // data参数和绑定数据一致
         }).then(() => {
@@ -82,6 +93,9 @@ export default {
   },
   created () {
     this.getChannel()
+    const { articleId } = this.$route.params
+    // && 运算符 如果前面为true 才会执行后面的逻辑 是否存在id
+    articleId && this.getArticleById(articleId)
   }
 }
 </script>
