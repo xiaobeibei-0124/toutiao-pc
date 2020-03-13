@@ -12,7 +12,8 @@
         <quill-editor style="width:90%;height:350px" v-model="formItem.content"></quill-editor>
       </el-form-item>
       <el-form-item label="封面" prop="cover" style="margin-top:130px">
-        <el-radio-group v-model="formItem.cover.type">
+        <!-- 给单选框添加值改变事件监视 -->
+        <el-radio-group v-model="formItem.cover.type" @change="changeType">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
           <el-radio :label="0">无图</el-radio>
@@ -56,6 +57,19 @@ export default {
     }
   },
   methods: {
+    // 上传图片改变类型事件
+    changeType () {
+      if (this.formItem.cover.type === 1) {
+        // 点击单图模式
+        this.formItem.cover.images = ['']
+      } else if (this.formItem.cover.type === 3) {
+        // 三图模式
+        this.formItem.cover.images = ['', '', '']
+      } else {
+        // 无图模式
+        this.formItem.cover.images = []
+      }
+    },
     // 根据id获取文章详情数据
     getArticleById (id) {
       this.$axios({

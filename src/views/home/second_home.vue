@@ -17,7 +17,7 @@ export default {
 
 <style>
   .second-home {
-    background-image: url("http://e.hiphotos.baidu.com/zhidao/pic/item/b64543a98226cffc7a951157b8014a90f703ea9c.jpg");
+    background-image: url("../../assets/img/date_bg.jpg");
     height: calc(100vh - 60px);
     background-size: cover;
     font-size: 20px;
